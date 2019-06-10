@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Source code generated using layoutit.com">
+	<meta name="author" content="LayoutIt!">
+
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+	<title>登陆到我的blog</title>
+
+</head>
+<body>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-md-4">
+				</div>
+				<div class="col-md-4">
+					<div class="alert alert-success alert-dismissable" style="margin-top:100px">
+
+						<h2>
+							MyBlog
+						</h2>
+					</div>
+					<div class="tabbable" id="tab">
+						<ul class="nav nav-tabs">
+							<li class="nav-item">
+								<a class="nav-link active" href="#tab1" data-toggle="tab"><h5>登录</h5></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="#tab2" data-toggle="tab"><h5>注册</h5></a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane active" id="tab1">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-12">
+											<form role="form">
+												<div class="form-group">
+
+													<label>
+														Account
+													</label>
+													<input type="text" class="form-control"/>
+												</div>
+												<div class="form-group">
+
+													<label>
+														Password
+													</label>
+													<input type="password" class="form-control" />
+												</div>
+
+												<button type="submit" class="btn btn-primary">
+													Submit
+												</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane" id="tab2">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-md-12">
+											<form role="form" id="register">
+												<div class="form-group">
+
+													<label>
+														用户名
+													</label>
+													<div class="row">
+														<div class="col-md-7">
+															<input type="text" name="username" id="username" class="form-control"  />
+														</div>
+														<div class="col-md-5">
+															<span class="badge badge-danger" id="username_info" ></span>
+														</div>
+													</div>
+
+												</div>
+												<div class="form-group">
+
+													<label>
+														昵称
+													</label>
+													<div class="row">
+														<div class="col-md-7">
+															<input type="text" name="nickname" id="nickname" class="form-control"  />
+														</div>
+														<div class="col-md-5">
+															<span class="badge badge-danger" id="nickname_info"></span>
+														</div>
+													</div>
+
+												</div>
+												<div class="form-group">
+
+													<label>
+														邮箱
+													</label>
+													<div class="row">
+														<div class="col-md-7">
+															<input type="email" name="email" id="email" class="form-control"  />
+														</div>
+														<div class="col-md-5">
+															<span class="badge badge-danger" id="email_info"></span>
+														</div>
+													</div>
+
+												</div>
+												<div class="form-group">
+
+													<label>
+														验证码
+													</label>
+													<div class="row">
+														<div class="col-md-7">
+															<input type="text" name="verifyCode" id="verifyCode" class="form-control"  />
+														</div>
+														<div class="col-md-5">
+														
+															<button type="button" id="post_yzm" class="btn btn-success">
+																发送验证码
+															</button>
+														</div>
+													</div>
+
+												</div>
+
+												<div class="form-group">
+
+													<label>
+														密码
+													</label>
+													<div class="row">
+														<div class="col-md-7">
+															<input type="password" id="password" name="password" class="form-control"  />
+														</div>
+														<div class="col-md-5">
+														</div>
+													</div>
+
+												</div>
+
+												
+											</form>
+											<button onclick="register()" id="btn_register" class="btn btn-primary">
+													注册
+												</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					输出结果：
+					<div id="result"></div>
+
+				</div>
+				<div class="col-md-4">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/scripts.js"></script>
+<script type="text/javascript">
+// 点击获取验证码操作
+  $('#post_yzm').click(function() {
+
+		// 判断邮箱是否为空
+	if($("#email").val().length==0){
+    	alert("邮箱不能为空");
+    	return;
+    	}
+
+// 禁用邮箱输入框 发送验证码按钮
+		$('#post_yzm').attr('disabled', true);
+		$("#email").attr('disabled', true);
+		
+// 禁用邮箱输入框 发送验证码按钮
+
+		// 发送邮件
+		$.ajax({
+					url: "/api/user/sendVerify?email="+$("#email").val(),
+					type: "get",
+					dataType:"json",
+					async: true,
+					success: function (data) {
+						// 如果成功发送验证码
+						if(data["code"] == 0){
+							let count = 60;
+						const countDown = setInterval(() => {
+							// 倒计时结束 停止定时器
+								if (count == 0) {
+									//   恢复 邮箱输入框 发送验证码按钮的使用
+										$('#post_yzm').text('重新发送').removeAttr('disabled');
+										$("#email").removeAttr('disabled');
+										//   恢复 邮箱输入框 发送验证码按钮的使用
+										
+										// 恢复发送验证码 按钮
+										$("#post_yzm").addClass("btn-success");
+										$("#post_yzm").removeClass("btn-secondary");
+										// 停止定时器
+										clearInterval(countDown);
+
+								}// 停止定时器 
+								else {
+									// 禁用邮箱输入框 发送验证码按钮
+								$('#post_yzm').attr('disabled', true);
+								$("#email").attr('disabled', true);
+								// 禁用邮箱输入框 发送验证码按钮
+
+								// 更新倒计时
+								$("#post_yzm").addClass("btn-secondary");
+								$("#post_yzm").removeClass("btn-success");
+								$('#post_yzm').text(count + '秒后可重新获取');
+								// 更新倒计时
+								}
+								count--;
+								}, 1000);
+
+					}// 如果成功发送验证码
+					else{
+	// 显示msg
+	alert(data["data"]);
+					}
+			
+					
+                
+              },
+              error: function (data) {
+				//   恢复 邮箱输入框 发送验证码按钮的使用
+				$('#post_yzm').removeAttr('disabled');
+				$("#email").removeAttr('disabled');
+				//   恢复 邮箱输入框 发送验证码按钮的使用
+              }
+          });
+
+				
+
+   
+  });
+
+    $('#username').change(function(e) {
+
+		// 空输入 清空提示框
+    	if(e.target.value.length==0){
+    	$("#username_info").html("");
+    	return;
+    	}
+// 空输入 清空提示框
+		$.ajax({
+              url: "/api/user/isUsernameExist?username="+e.target.value,
+              type: "get",
+              dataType:"json",
+              async: true,
+              success: function (data) {
+                  if(data["code"] == 0){
+						//success
+					$("#username_info").addClass("badge-success");
+					$("#username_info").removeClass("badge-danger");
+                  }else{
+					$("#username_info").addClass("badge-danger");
+					$("#username_info").removeClass("badge-success");
+                  }
+                  $("#username_info").html(data["data"]);
+              },
+              error: function (data) {
+
+              }
+          });
+
+
+    });
+
+
+    $("#nickname").change(function(e) {
+		// 空输入 清空提示框
+       if(e.target.value.length==0){
+    	$("#nickname_info").html("");
+    	return;
+    	}
+		// 空输入 清空提示框
+		$.ajax({
+              url: "/api/user/isNicknameExist?nickname="+e.target.value,
+              type: "get",
+              dataType:"json",
+              async: true,
+              success: function (data) {
+                  if(data["code"] == 0){
+						//success
+					$("#nickname_info").addClass("badge-success");
+					$("#nickname_info").removeClass("badge-danger");
+                  }else{
+					$("#nickname_info").addClass("badge-danger");
+					$("#nickname_info").removeClass("badge-success");
+                  }
+                  $("#nickname_info").html(data["data"]);
+              },
+              error: function (data) {
+
+              }
+          });
+    })
+
+
+    $("#email").change(function(e) {
+		// 空输入 清空提示框
+        if(e.target.value.length==0){
+    	$("#email_info").html("");
+    	return;
+    	}
+		// 空输入 清空提示框
+		$.ajax({
+              url: "/api/user/isEmailExist?email="+e.target.value,
+              type: "get",
+              dataType:"json",
+              async: true,
+              success: function (data) {
+                  if(data["code"] == 0){
+						//success
+					$("#email_info").addClass("badge-success");
+					$("#email_info").removeClass("badge-danger");
+                  }else{
+					$("#email_info").addClass("badge-danger");
+					$("#email_info").removeClass("badge-success");
+                  }
+                  $("#email_info").html(data["data"]);
+              },
+              error: function (data) {
+
+              }
+          });
+    })
+
+     function register() {
+		$('#btn_register').attr('disabled', true);
+ 			var params=JSON.stringify({
+ 			"username":$("#username").val(),
+ 			"nickname":$("#nickname").val(),
+ 			"email":$("#email").val(),
+ 			"verifyCode":$("#verifyCode").val(),
+ 			"password":$("#password").val()
+ 			});
+
+<!--var arry = $("#register").serializeArray();-->
+<!--var params=JSON.stringify(arry)-->
+            $.ajax({
+                url:"/api/user/register",
+                type:"post",
+                dataType:"json",
+				data: params,
+				contentType: "application/json;charset-UTF-8",
+                processData:false,
+                success:function(data){
+                		if(data["data"]== "注册成功" ){
+                						//   恢复 邮箱输入框 发送验证码按钮的使用
+										$('#post_yzm').text('发送验证码').removeAttr('disabled');
+										$("#email").removeAttr('disabled');
+										//   恢复 邮箱输入框 发送验证码按钮的使用
+
+										// 恢复发送验证码 按钮
+										$("#post_yzm").addClass("btn-success");
+										$("#post_yzm").removeClass("btn-secondary");
+
+										$(':input','#register')
+													 .not(':button, :submit, :reset, :hidden')
+													 .val('')
+													 .removeAttr('checked')
+													 .removeAttr('selected');
+
+<!--										$("#username").val("");-->
+<!--										$("#nickname").val("");-->
+<!--										$("#email").val("");-->
+<!--										$("#verifyCode").val("");-->
+<!--										$("#password").val("");-->
+                		}
+
+                    alert(data["data"]);
+                },
+                error: function (data) {
+                    alert(data["data"]);
+              },
+                complete:function () {
+					$('#btn_register').removeAttr('disabled');
+                }
+            });
+      }
+	  
+
+</script>
+</body>
+</html>

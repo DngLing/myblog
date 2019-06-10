@@ -1,0 +1,55 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.my.blog.dao.UserDao">
+    <select id="queryAllUser" resultType="User">
+        select * from user;
+    </select>
+
+    <select id="queryUserByUsername" resultType="User" parameterType="String" timeout="2000">
+        select id, username, password, email, nickname, head_img, my_info, role, state
+        from user where username = #{usernmae}
+    </select>
+
+    <select id="isUsernameExist" parameterType="String" resultType="int" timeout="2000">
+        select count(*)
+        from user
+        where username = #{username}
+    </select>
+
+    <select id="isEmailExist" parameterType="String" resultType="int" timeout="2000">
+        select count(*)
+        from user
+        where email = #{email}
+    </select>
+
+    <select id="isNicknameExist" parameterType="String" resultType="int" timeout="2000">
+        select count(*)
+        from user
+        where nickname = #{nickname}
+    </select>
+
+    <insert id="insertUser" parameterType="User" useGeneratedKeys="true" timeout="2000">
+        insert into user(username,password,email,nickname,my_info)
+        values (#{username},#{password},#{email},#{nickname},#{myInfo})
+    </insert>
+
+    <update id="updateNicknameByUsername" parameterType="String" timeout="2000">
+        update  user set
+        nickname = #{nickname}
+        where username = #{username}
+    </update>
+    
+    <update id="updateProfileByUsername" parameterType="String" timeout="2000">
+        update user set
+        my_info = #{profile}
+        where username = #{username}
+    </update>
+
+    <update id="updateHeadImg" parameterType="String" timeout="2000">
+        update user set
+        head_img = #{headImg}
+        where username = #{username}
+    </update>
+
+</mapper>
