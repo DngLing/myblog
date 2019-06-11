@@ -38,8 +38,6 @@ import java.util.Map;
 @RequestMapping("/api/user")
 public class UserController extends BaseController{
 
-    @Value("${head.path}")
-    private String headImgPath;
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -172,78 +170,6 @@ public class UserController extends BaseController{
     }
 
     /**
-     * 修改昵称接口
-     * @param nickname
-     * @param request
-     * @return
-     * @throws CustomException
-     */
-    @UserToken
-    @GetMapping("/update/nickname")
-    public CommonReturnType updateNickName(String nickname, HttpServletRequest request) throws CustomException {
-        String token = request.getHeader("token");
-        String username = JWT.decode(token).getAudience().get(0);
-        int code = userService.updateNickNameByUsername(nickname,username);
-        if(code == 0){
-            return new CommonReturnType(1,"fail","修改昵称失败");
-        }
-        return new CommonReturnType("修改成功");
-    }
-
-    /**
-     * 修改个人简介接口
-     * @param newProfile
-     * @param request
-     * @return
-     * @throws CustomException
-     */
-    @UserToken
-    @GetMapping("/update/profile")
-    public CommonReturnType updateUserProfile(String newProfile,HttpServletRequest request) throws CustomException {
-        String token = request.getHeader("token");
-        String username = JWT.decode(token).getAudience().get(0);
-        int code =  userService.updateProfileByUsername(newProfile,username);
-        if(code == 0){
-            return new CommonReturnType(1,"fail","修改失败");
-        }
-        return new CommonReturnType("修改成功");
-    }
-
-    /**
-     * 上传头像照片接口
-     * @param file
-     * @param request
-     * @return
-     * @throws CustomException
-     */
-    @UserToken
-    @PostMapping("/upload/headImg")
-    @Transactional(rollbackFor = {RuntimeException.class,Exception.class})
-    public CommonReturnType uploadNewHeadImg(MultipartFile file, HttpServletRequest request) throws CustomException {
-        if(!file.getOriginalFilename().endsWith(".jpg")){
-            throw new CustomException(CommonExceptionEnum.HEADIMG_NOT_JPG);
-        }
-        String token = request.getHeader("token");
-        String username = JWT.decode(token).getAudience().get(0);
-        String path = headImgPath + username +".jpg";
-        if(!file.isEmpty()){
-            try {
-                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream( new File(path)));
-                bos.write(file.getBytes());
-                bos.flush();
-                bos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new CustomException(CommonExceptionEnum.UPLOAD_FILE_FAIL);
-            }
-            userService.updateHeadImg(path,username);
-        }else {
-            return new CommonReturnType(1,"fail","上传为空");
-        }
-        return new CommonReturnType("上传成功");
-    }
-
-    /**
      * 获得用户信息的接口
      * @param request
      * @return
@@ -257,7 +183,6 @@ public class UserController extends BaseController{
         UserView userView = convertUserToUserView(user);
         return new CommonReturnType(userView);
     }
-
 
 
 }

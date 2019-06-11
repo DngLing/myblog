@@ -2,54 +2,65 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.my.blog.dao.UserDao">
+    <!-- 查找所有User对象 -->
     <select id="queryAllUser" resultType="User">
         select * from user;
     </select>
 
+    <!-- 通过username 查找 User 返回所有数据 -->
     <select id="queryUserByUsername" resultType="User" parameterType="String" timeout="2000">
         select id, username, password, email, nickname, head_img, my_info, role, state
         from user where username = #{usernmae}
     </select>
 
+    <!-- 判断username 是否被注册 -->
     <select id="isUsernameExist" parameterType="String" resultType="int" timeout="2000">
         select count(*)
         from user
         where username = #{username}
     </select>
 
+    <!-- 判断邮箱是否被注册 -->
     <select id="isEmailExist" parameterType="String" resultType="int" timeout="2000">
         select count(*)
         from user
         where email = #{email}
     </select>
 
+    <!-- 判断昵称是否被注册 -->
     <select id="isNicknameExist" parameterType="String" resultType="int" timeout="2000">
         select count(*)
         from user
         where nickname = #{nickname}
     </select>
 
+    <!-- 新增用户 -->
     <insert id="insertUser" parameterType="User" useGeneratedKeys="true" timeout="2000">
         insert into user(username,password,email,nickname,my_info)
         values (#{username},#{password},#{email},#{nickname},#{myInfo})
     </insert>
 
+    <!-- 修改昵称 -->
     <update id="updateNicknameByUsername" parameterType="String" timeout="2000">
         update  user set
         nickname = #{nickname}
         where username = #{username}
     </update>
-    
+
+    <!-- 修改个人简介 -->
     <update id="updateProfileByUsername" parameterType="String" timeout="2000">
         update user set
         my_info = #{profile}
         where username = #{username}
     </update>
 
+    <!-- 上传头像 -->
     <update id="updateHeadImg" parameterType="String" timeout="2000">
         update user set
         head_img = #{headImg}
         where username = #{username}
     </update>
+
+
 
 </mapper>

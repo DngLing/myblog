@@ -80,6 +80,7 @@ public class AuthenticationIntercepter implements HandlerInterceptor {
                     throw new CustomException(CommonExceptionEnum.LOGIN_EXP);
                 }
 
+                //时效性
                 String vToken = redisUtil.get("token:"+username);
                 if(vToken == null){
                     throw new CustomException(CommonExceptionEnum.LOGIN_TIMEOUT);

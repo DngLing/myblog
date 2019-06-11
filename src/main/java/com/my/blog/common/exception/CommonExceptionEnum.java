@@ -21,6 +21,8 @@ public enum CommonExceptionEnum implements CommonException{
     TOO_LONG_ERR(11,"超过字数限制"),
     HEADIMG_NOT_JPG(12,"头像图片格式不正确"),
     UPLOAD_FILE_FAIL(13,"上传文件失败"),
+    FILE_EMPTY(14,"文件为空"),
+    TOO_BIG_FILE(15,"文件超过2M"),
 
     //30
     SEND_EMAIL_FAIL(30,"发送邮件失败"),
